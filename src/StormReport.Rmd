@@ -1,0 +1,15 @@
+---
+title: "Storm Report"
+author: "Paul Reiners"
+date: "August 9, 2014"
+output: html_document
+---
+
+Synopsis
+--------
+
+Data Processing
+---------------
+
+Results
+-------
