@@ -10,6 +10,23 @@ Synopsis
 
 Data Processing
 ---------------
+```{r}
+library(ggplot2)
+```
+
+```{r}
+storm.data <- read.csv("./data/repdata-data-StormData.csv")
+reduced.storm.data <- 
+        storm.data[,c("EVTYPE", "FATALITIES", "INJURIES", "PROPDMG")]
+agg.fatalities.data <-
+        aggregate(
+                reduced.storm.data$FATALITIES, 
+                by=list(reduced.storm.data$EVTYPE), FUN=sum, na.rm=TRUE)
+colnames(agg.fatalities.data) = c("event.type", "fatality.total")
+fatalities.sorted <- agg.fatalities.data[order(-agg.fatalities.data$fatality.total),] 
+top.fatalities <- fatalities.sorted[1:10,]
+ggplot(data=top.fatalities, aes(x=event.type, y=fatality.total)) + geom_bar(stat="identity")
+```
 
 Results
 -------
