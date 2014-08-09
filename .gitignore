@@ -2,3 +2,6 @@
 data/repdata-data-StormData.csv
 .gitignore~
 data/
+src/StormReport.html
+src/StormReport_cache/
+src/StormReport_files/

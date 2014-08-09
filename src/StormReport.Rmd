@@ -10,12 +10,16 @@ Synopsis
 
 Data Processing
 ---------------
-```{r}
+```{r cache=TRUE}
+# This only works if I use the full path.  I don't know why.
+storm.data = read.csv("/Users/paulreiners/Dropbox/education/coursera/JohnsHopkins/DataScience/05_ReproducibleResearch/reproducible-research-project-2/data/repdata-data-StormData.csv", header = TRUE)
+```
+
+```{r echo=FALSE}
 library(ggplot2)
 ```
 
 ```{r}
-storm.data <- read.csv("./data/repdata-data-StormData.csv")
 reduced.storm.data <- 
         storm.data[,c("EVTYPE", "FATALITIES", "INJURIES", "PROPDMG")]
 agg.fatalities.data <-
@@ -25,7 +29,13 @@ agg.fatalities.data <-
 colnames(agg.fatalities.data) = c("event.type", "fatality.total")
 fatalities.sorted <- agg.fatalities.data[order(-agg.fatalities.data$fatality.total),] 
 top.fatalities <- fatalities.sorted[1:10,]
-ggplot(data=top.fatalities, aes(x=event.type, y=fatality.total)) + geom_bar(stat="identity")
+top.fatalities$event.type <- 
+    factor(
+        top.fatalities$event.type, levels=top.fatalities$event.type, 
+        ordered=TRUE)
+ggplot(data=top.fatalities, aes(x=event.type, y=fatality.total)) + 
+    geom_bar(stat="identity") + xlab("Event type") + ylab("Total fatalities") + 
+    ggtitle("Fatalities By Event Type")
 ```
 
 Results
