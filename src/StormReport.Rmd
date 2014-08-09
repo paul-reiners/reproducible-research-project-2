@@ -12,7 +12,8 @@ Data Processing
 ---------------
 ```{r cache=TRUE}
 # This only works if I use the full path.  I don't know why.
-storm.data = read.csv("/Users/paulreiners/Dropbox/education/coursera/JohnsHopkins/DataScience/05_ReproducibleResearch/reproducible-research-project-2/data/repdata-data-StormData.csv", header = TRUE)
+file <- "/Users/paulreiners/Dropbox/education/coursera/JohnsHopkins/DataScience/05_ReproducibleResearch/reproducible-research-project-2/data/repdata-data-StormData.csv"
+storm.data = read.csv(file, header = TRUE)
 ```
 
 ```{r echo=FALSE}
@@ -35,7 +36,8 @@ top.fatalities$event.type <-
         ordered=TRUE)
 ggplot(data=top.fatalities, aes(x=event.type, y=fatality.total)) + 
     geom_bar(stat="identity") + xlab("Event type") + ylab("Total fatalities") + 
-    ggtitle("Fatalities By Event Type")
+    ggtitle("Fatalities By Event Type") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Results
