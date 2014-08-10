@@ -26,6 +26,16 @@ reduced.storm.data <-
         storm.data[,c("EVTYPE", "FATALITIES", "INJURIES", "PROPDMG")]
 ```
 
+Normalize event names.
+```{r}
+reduced.storm.data$EVTYPE <- 
+    gsub("^HEAT$", "EXCESSIVE HEAT", reduced.storm.data$EVTYPE)
+reduced.storm.data$EVTYPE <- 
+    gsub("^TSTM WIND$", "THUNDERSTORM WIND", reduced.storm.data$EVTYPE)
+reduced.storm.data$EVTYPE <- 
+    gsub("^THUNDERSTORM WIND$", "THUNDERSTORM WINDS", reduced.storm.data$EVTYPE)
+```
+
 First we aggregate data on fatalities and find which events are the top 10 cause
 of fatalities.
 ```{r}
