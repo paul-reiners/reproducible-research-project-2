@@ -10,9 +10,9 @@ Synopsis
 
 Data Processing
 ---------------
+We load our data.
 ```{r cache=TRUE}
-# This only works if I use the full path.  I don't know why.
-file <- "/Users/paulreiners/Dropbox/education/coursera/JohnsHopkins/DataScience/05_ReproducibleResearch/reproducible-research-project-2/data/repdata-data-StormData.csv"
+file <- "../data/repdata-data-StormData.csv"
 storm.data = read.csv(file, header = TRUE)
 ```
 
@@ -20,9 +20,15 @@ storm.data = read.csv(file, header = TRUE)
 library(ggplot2)
 ```
 
+We don't need all the columns.
 ```{r}
 reduced.storm.data <- 
         storm.data[,c("EVTYPE", "FATALITIES", "INJURIES", "PROPDMG")]
+```
+
+First we aggregate data on fatalities and find which events are the top 10 cause
+of fatalities.
+```{r}
 agg.fatalities.data <-
         aggregate(
                 reduced.storm.data$FATALITIES, 
@@ -34,11 +40,60 @@ top.fatalities$event.type <-
     factor(
         top.fatalities$event.type, levels=top.fatalities$event.type, 
         ordered=TRUE)
+```
+
+We next do the same for injuries.
+```{r}
+agg.injuries.data <-
+        aggregate(
+                reduced.storm.data$INJURIES, 
+                by=list(reduced.storm.data$EVTYPE), FUN=sum, na.rm=TRUE)
+colnames(agg.injuries.data) = c("event.type", "injury.total")
+injuries.sorted <- agg.injuries.data[order(-agg.injuries.data$injury.total),] 
+top.injuries <- injuries.sorted[1:10,]
+top.injuries$event.type <- 
+    factor(
+        top.injuries$event.type, levels=top.injuries$event.type, 
+        ordered=TRUE)
+```
+
+Finally we do the same for property damage.
+```{r}
+agg.prop.dmg.data <-
+        aggregate(
+                reduced.storm.data$PROPDMG, 
+                by=list(reduced.storm.data$EVTYPE), FUN=sum, na.rm=TRUE)
+colnames(agg.prop.dmg.data) = c("event.type", "prop.dmg.total")
+prop.dmg.sorted <- agg.prop.dmg.data[order(-agg.prop.dmg.data$prop.dmg.total),] 
+top.prop.dmg <- prop.dmg.sorted[1:10,]
+top.prop.dmg$event.type <- 
+    factor(
+        top.prop.dmg$event.type, levels=top.prop.dmg$event.type, 
+        ordered=TRUE)
+```
+
+Results
+-------
+We graph the top 10 causes of fatalities.
+```{r}
 ggplot(data=top.fatalities, aes(x=event.type, y=fatality.total)) + 
     geom_bar(stat="identity") + xlab("Event type") + ylab("Total fatalities") + 
     ggtitle("Fatalities By Event Type") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Results
--------
+We do the same for injuries.
+```{r}
+ggplot(data=top.injuries, aes(x=event.type, y=injury.total)) + 
+    geom_bar(stat="identity") + xlab("Event type") + ylab("Total injuries") + 
+    ggtitle("Injuries By Event Type") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Finally we do so for property damage.
+```{r}
+ggplot(data=top.prop.dmg, aes(x=event.type, y=prop.dmg.total)) + 
+    geom_bar(stat="identity") + xlab("Event type") + ylab("Total property damage") + 
+    ggtitle("Property Damage By Event Type") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
