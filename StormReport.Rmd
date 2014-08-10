@@ -1,5 +1,5 @@
 ---
-title: "Storm Report"
+title: "Most Harmful Weather Events"
 author: "Paul Reiners"
 date: "August 9, 2014"
 output: html_document
@@ -7,17 +7,20 @@ output: html_document
 
 Synopsis
 --------
+Across the United States, tornadoes, excessive heat, and flash floods are most 
+harmful with respect to population health.
+
+Across the United States, tornadoes, thunderstorm winds, and flash floods have 
+the greatest economic consequences.
+
+Our raw data are taken from 
+[National Weather Service Instruction 10-1605](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf).  
 
 Data Processing
 ---------------
 We load our data.
 ```{r cache=TRUE}
-file <- "../data/repdata-data-StormData.csv"
-storm.data = read.csv(file, header = TRUE)
-```
-
-```{r echo=FALSE}
-library(ggplot2)
+storm.data = read.csv(bzfile("repdata-data-StormData.csv.bz2"), header = TRUE)
 ```
 
 We don't need all the columns.
@@ -36,8 +39,8 @@ reduced.storm.data$EVTYPE <-
     gsub("^THUNDERSTORM WIND$", "THUNDERSTORM WINDS", reduced.storm.data$EVTYPE)
 ```
 
-First we aggregate data on fatalities and find which events are the top 10 cause
-of fatalities.
+First we aggregate data on fatalities and find which events are the top 10 
+causes of fatalities.
 ```{r}
 agg.fatalities.data <-
         aggregate(
@@ -86,6 +89,7 @@ Results
 -------
 We graph the top 10 causes of fatalities.
 ```{r}
+library(ggplot2)
 ggplot(data=top.fatalities, aes(x=event.type, y=fatality.total)) + 
     geom_bar(stat="identity") + xlab("Event type") + ylab("Total fatalities") + 
     ggtitle("Fatalities By Event Type") +

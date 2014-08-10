@@ -5,3 +5,7 @@ data/
 src/StormReport.html
 src/StormReport_cache/
 src/StormReport_files/
+StormReport.html
+StormReport_cache/
+StormReport_files/
+repdata-data-StormData.csv.bz2
